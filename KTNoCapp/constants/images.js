@@ -5,7 +5,7 @@ import path from "../assets/images/path.png"
 import thumbnail from "../assets/images/thumbnail.png"
 import logo from "../assets/images/logo.png"
 import logoSmall from "../assets/images/logo-small.png"
-import background from "../assets/coolbackground.jpg"
+// import background from "../assets/coolbackground.jpg"
 
 export default {
 	profile,
@@ -15,5 +15,5 @@ export default {
 	logo,
 	logoSmall,
 	empty,
-	background,
+	// background,
 }

@@ -1,4 +1,5 @@
 import { StatusBar } from "expo-status-bar"
+import "react-native-url-polyfill/auto"
 import { Redirect, router } from "expo-router"
 import {
 	View,
@@ -7,115 +8,164 @@ import {
 	ScrollView,
 	ImageBackground,
 	StyleSheet,
+	Animated, // Import Animated
 } from "react-native"
 import { SafeAreaView } from "react-native-safe-area-context"
+import { useEffect, useRef } from "react"
 
 import logo from "../assets/images/KyDaTaLogoGold.png"
 import cards from "../assets/images/smokingiscool.jpg"
 import path from "../assets/images/path.png"
-import background from "../assets/coolbackground.jpg"
+import background from "../assets/backgrounds/coolbackground.jpg"
 
 import { Loader } from "../components/Loader.jsx"
 import { useGlobalContext } from "../context/GlobalProvider"
 import CustomButton from "../components/CustomButton.jsx"
-
 const Welcome = () => {
-	// const { loading, isLogged } = useGlobalContext()
+	const fadeAnim = useRef(new Animated.Value(1)).current // Initial opacity value
 
-	// if (!loading && isLogged) return <Redirect href="/home" />
+	const handlePress = () => {
+		// Fade out
+		Animated.timing(fadeAnim, {
+			toValue: 0,
+			duration: 1000,
+			useNativeDriver: true,
+		}).start(() => {
+			// Navigate to sign-in and fade in
+			router.push("/sign-in")
+			Animated.timing(fadeAnim, {
+				toValue: 1,
+				duration: 1000,
+				useNativeDriver: true,
+			}).start()
+		})
+	}
 
 	return (
-		<SafeAreaView style={{ flex: 1 }}>
-			<ImageBackground
-				source={background}
-				resizeMode="cover"
-				style={StyleSheet.absoluteFillObject}
-			>
-				<ScrollView
-					contentContainerStyle={{
-						height: "100%",
-					}}
+		<Animated.View style={{ flex: 1, opacity: fadeAnim }}>
+			<SafeAreaView style={{ flex: 1 }}>
+				<ImageBackground
+					source={background}
+					resizeMode="cover"
+					style={StyleSheet.absoluteFillObject}
 				>
-					<View
-						className="w-full flex justify-center items-center min-h-[85vh] px-4"
-						style={{ marginTop: 75 }} // Adjust the marginTop as needed
-					>
-						<View
-							style={{
-								position: "absolute",
-								top: 20, // Adjust as needed
-								left: 20, // Adjust as needed
-							}}
-						>
-							<Image
-								source={logo}
-								style={{
-									width: 50, // Adjust size as needed
-									height: 50, // Adjust size as needed
-								}}
-								resizeMode="contain"
-							/>
-						</View>
-
-						<View
-							style={{
-								width: "100%",
-								maxWidth: 380,
-								height: 298,
-								shadowColor: "#fff",
-								shadowOffset: { width: 0, height: 0 },
-								shadowOpacity: 0.4,
-								shadowRadius: 20, // Increased shadowRadius
-								elevation: 20, // Increased elevation for Android
-								justifyContent: "center",
-								alignItems: "center",
-							}}
-						>
-							<Image
-								source={cards}
-								style={{
-									width: "100%",
-									height: "100%",
-								}}
-								resizeMode="contain"
-							/>
-						</View>
-
-						<View className="relative mt-5">
-							<Text className="text-3xl text-white font-bold text-center">
-								Discover Endless{"\n"}
-								Possibilities with{" "}
-								<Text className="text-amber-200">Kydata</Text>
-							</Text>
-						</View>
-						<View className="relative  justify-center items-center">
+					<ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+						<View style={{ flex: 1 }}>
 							<View
 								style={{
-									backgroundColor: "rgba(0, 0, 0, 0.5)", // Dark transparent background
-									padding: 10, // Add padding for better spacing
-									borderRadius: 10, // Optional: Add border radius for rounded corners
-									marginTop: 20, // Adjust margin as needed
+									position: "absolute",
+									top: 70,
+									left: 0,
 								}}
 							>
-								<Text className="text-sm font-pregular text-white text-center">
-									Where Creativity Meets Innovation: Embark on
-									a Journey of Limitless Exploration with
-									Kydata
-								</Text>
+								<Image
+									source={logo}
+									style={{ width: 75, height: 75 }}
+								/>
 							</View>
+							<View
+								style={{
+									flex: 1,
+									justifyContent: "center",
+									alignItems: "center", // Center children horizontally
+									paddingHorizontal: 20,
+								}}
+							>
+								<View
+									style={{
+										position: "absolute",
+										top: "35%", // Adjusted to be above the text
+										shadowColor: "#39effc", // Light blue shadow color
+										shadowOffset: {
+											width: 0,
+											height: 0,
+										},
+										shadowOpacity: 0.8,
+										shadowRadius: 20,
+										elevation: 10,
+									}}
+								>
+									<Image
+										source={cards}
+										style={{
+											width: 250,
+											height: 300,
+											borderRadius: 10, // Optional: Add border radius for rounded corners
+											top: "-50%", // Adjusted to be higher up
+											shadowColor: "#39effc", // Light blue shadow color
+											shadowOffset: {
+												width: 0,
+												height: 0,
+											},
+											shadowOpacity: 0,
+											shadowRadius: 30, // Increased for a more pronounced glow effect
+											elevation: 10,
+										}}
+										resizeMode="contain"
+									/>
+								</View>
+								<View
+									style={{
+										position: "absolute",
+										top: "59%", // Adjusted down by 20px
+										transform: [
+											{ translateY: -50 }, // Adjust based on text height
+										],
+									}}
+								>
+									<Text className="text-3xl text-white font-bold text-center">
+										Discover Endless{"\n"}
+										Possibilities with{" "}
+										<Text className="text-amber-200">
+											Kydata
+										</Text>
+									</Text>
+								</View>
+								<View
+									style={{
+										position: "absolute",
+										top: "65%", // Adjusted down by 20px
+										width: 300, // Adjust based on desired container width
+										alignItems: "center",
+									}}
+								>
+									<View
+										style={{
+											backgroundColor:
+												"rgba(0, 0, 0, 0.5)", // Dark transparent background
+											padding: 10, // Add padding for better spacing
+											borderRadius: 10, // Optional: Add border radius for rounded corners
+											marginBottom: 20, // Space between text and button
+										}}
+									>
+										<Text className="text-sm font-pregular text-white text-center">
+											Where Creativity Meets Innovation:
+											Embark on a Journey of Limitless
+											Exploration with Kydata
+										</Text>
+									</View>
 
-							<CustomButton
-								title="Continue with Email"
-								handlePress={() => router.push("/sign-in")}
-								containerStyles="w-full mt-7"
-							/>
+									<CustomButton
+										title="Sign In"
+										handlePress={handlePress}
+										containerStyles="mt-5"
+									/>
+								</View>
+								<View
+									style={{
+										position: "absolute",
+										bottom: 50,
+										transform: [
+											{ translateX: -150 }, // Adjust based on image width
+										],
+									}}
+								></View>
+							</View>
 						</View>
-					</View>
-				</ScrollView>
-
-				<StatusBar backgroundColor="#161622" style="light" />
-			</ImageBackground>
-		</SafeAreaView>
+					</ScrollView>
+				</ImageBackground>
+			</SafeAreaView>
+		</Animated.View>
 	)
 }
 
